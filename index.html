@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>Mind Docs — Digital Mind</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0E0E0E;--surface:#1A1A1A;--surface2:#222;--line:#2E2E2E;--cream:#F2EEE3;--muted:#8A877E;--gold:#F5C842;--danger:#E0654A}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--cream);font-family:Inter,system-ui,sans-serif}
+body{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:130px}
+h2,h3{font-family:"Space Grotesk",sans-serif}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 10px}
+.brand{font-family:"Space Grotesk";font-weight:700;font-size:17px}
+.brand b{color:var(--gold)}
+.brand small{display:block;font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.who{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
+.who .dot{width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.pad{padding:8px 18px}
+.lbl{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:18px 2px 9px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{flex:1;min-width:90px;text-align:center;padding:12px 6px;border-radius:13px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:14px;cursor:pointer;transition:.15s}
+.chip small{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+.chip.on{background:var(--gold);color:#111;border-color:var(--gold)}
+.chip.on small{color:#3a3206}
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:transparent;color:var(--cream);font-family:"Space Grotesk";font-weight:600;font-size:14px;padding:11px 0;border-radius:10px;cursor:pointer}
+.seg button.on{background:var(--cream);color:#111}
+input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:13px;color:var(--cream);padding:14px;font-size:16px;font-family:Inter;outline:none}
+input:focus{border-color:var(--gold)}
+input::placeholder{color:#5d5b54}
+.line{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.line .desig{width:100%;margin-bottom:9px}
+.line .row2{display:flex;gap:9px;align-items:center}
+.line .row2 input{text-align:center}
+.qty{flex:0 0 70px}.pu{flex:1}
+.ltot{flex:0 0 auto;min-width:78px;text-align:right;font-family:"Space Grotesk";font-weight:600;font-size:15px;color:var(--gold)}
+.del{flex:0 0 auto;background:transparent;border:0;color:#6a6862;font-size:20px;padding:0 2px;cursor:pointer}
+.addline{width:100%;background:transparent;border:1.5px dashed var(--line);color:var(--cream);border-radius:13px;padding:13px;font-weight:600;font-size:14px;cursor:pointer;font-family:Inter}
+.ticket{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;background:linear-gradient(180deg,#161616,#0E0E0E);border-top:1px solid var(--line);padding:13px 18px calc(13px + env(safe-area-inset-bottom));box-shadow:0 -12px 30px rgba(0,0,0,.5)}
+.tline{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted);margin-bottom:3px}
+.tline.big{margin-top:5px}
+.tline.big .k{color:var(--cream);font-weight:600;font-size:14px}
+.tline.big .v{font-family:"Space Grotesk";font-weight:700;font-size:26px;color:var(--gold)}
+.v.sm{font-family:"Space Grotesk";color:var(--cream)}
+.gen{width:100%;margin-top:11px;background:var(--gold);color:#111;border:0;border-radius:14px;padding:16px;font-family:"Space Grotesk";font-weight:700;font-size:16px;cursor:pointer}
+.gen:disabled{background:var(--surface2);color:#5d5b54}
+.gate{position:fixed;inset:0;background:var(--bg);z-index:30;display:flex;flex-direction:column;justify-content:center;padding:30px;max-width:480px;margin:0 auto}
+.gate h2{font-size:26px;margin:0 0 6px}
+.gate p{color:var(--muted);margin:0 0 28px;font-size:14px}
+.pin{display:flex;gap:10px;justify-content:center;margin:8px 0 16px}
+.pin div{width:46px;height:56px;border:1px solid var(--line);border-radius:12px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:"Space Grotesk";font-size:24px}
+.err{color:var(--danger);text-align:center;font-size:13px;height:18px;margin-bottom:8px}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.keys button{padding:18px;background:var(--surface);border:1px solid var(--line);border-radius:13px;color:var(--cream);font-family:"Space Grotesk";font-size:20px;font-weight:600;cursor:pointer}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none;align-items:flex-end}
+.sheet.show{display:flex}
+.sheet .card{background:var(--surface);width:100%;max-width:480px;margin:0 auto;border-radius:20px 20px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom));border-top:2px solid var(--gold)}
+.sheet h3{margin:0 0 4px;font-size:20px}
+.sheet .recap{font-size:14px;color:var(--cream);line-height:1.7;margin:14px 0;border-top:1px solid var(--line);padding-top:14px}
+.sheet .recap b{color:var(--gold)}
+.sheet .close{width:100%;background:var(--cream);color:#111;border:0;border-radius:13px;padding:15px;font-weight:700;font-family:"Space Grotesk";font-size:15px;margin-top:8px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="lbl" style="margin:0 0 14px">Mind Automation</div>
+  <h2>Bonjour 👋</h2>
+  <p>Choisis ton nom et tape ton code.</p>
+  <div class="lbl">Qui es-tu ?</div>
+  <div class="chips" id="whoChips">
+    <div class="chip on" data-who="Chadrak">Chadrak</div>
+    <div class="chip" data-who="Amra">Amra</div>
+    <div class="chip" data-who="Mahaza">Mahaza</div>
+    <div class="chip" data-who="Yasmine">Yasmine</div>
+    <div class="chip" data-who="Ben">Ben</div>
+  </div>
+  <div class="lbl">Code</div>
+  <div class="pin"><div id="p0"></div><div id="p1"></div><div id="p2"></div><div id="p3"></div></div>
+  <div class="err" id="err"></div>
+  <div class="keys">
+    <button onclick="key('1')">1</button><button onclick="key('2')">2</button><button onclick="key('3')">3</button>
+    <button onclick="key('4')">4</button><button onclick="key('5')">5</button><button onclick="key('6')">6</button>
+    <button onclick="key('7')">7</button><button onclick="key('8')">8</button><button onclick="key('9')">9</button>
+    <button onclick="key('back')">⌫</button><button onclick="key('0')">0</button><button onclick="key('ok')" style="color:var(--gold)">→</button>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="brand">Mind <b>Automation</b><small>Générateur de documents</small></div>
+  <div class="who"><span class="dot"></span><span id="whoName">Chadrak</span></div>
+</div>
+
+<div class="pad">
+  <div class="lbl">Entité de facturation</div>
+  <div class="chips" id="entity">
+    <div class="chip on" data-e="Digital Mind" data-tva="1">Digital Mind<small>TVA 19%</small></div>
+    <div class="chip" data-e="ICD" data-tva="0">ICD<small>HT</small></div>
+    <div class="chip" data-e="SKY BLUE.AI" data-tva="0">SKY BLUE.AI<small>HT</small></div>
+  </div>
+  <div class="lbl">Type de document</div>
+  <div class="seg" id="doctype">
+    <button class="on" data-d="Proforma">Proforma</button>
+    <button data-d="Facture">Facture</button>
+    <button data-d="BL">Bon de livraison</button>
+  </div>
+  <div class="lbl">Client</div>
+  <input id="client" placeholder="Nom du client" autocomplete="off"/>
+  <div class="lbl">Articles</div>
+  <div id="lines"></div>
+  <button class="addline" onclick="addLine()">+ Ajouter un article</button>
+</div>
+
+<div class="ticket">
+  <div class="tline"><span class="k">Total HT</span><span class="v sm" id="htv">0 FCFA</span></div>
+  <div class="tline" id="tvaLine" style="display:none"><span>TVA 19%</span><span class="v sm" id="tvav">0</span></div>
+  <div class="tline big"><span class="k" id="totLabel">Net à payer</span><span class="v" id="totv">0 FCFA</span></div>
+  <button class="gen" id="genBtn" disabled onclick="generate()">Générer le document</button>
+</div>
+
+<div class="sheet" id="sheet">
+  <div class="card">
+    <h3 id="shT">Génération en cours…</h3>
+    <p id="shP" style="color:var(--muted);margin:6px 0 0;font-size:13px">Le PDF sera disponible dans quelques secondes.</p>
+    <div class="recap" id="recap"></div>
+    <button class="close" onclick="closeSheet()">Nouveau document</button>
+  </div>
+</div>
+
+<script>
+var CODES={Chadrak:"4827",Amra:"5193",Mahaza:"6470",Yasmine:"7351",Ben:"9024"};
+var fmt=function(n){return n.toLocaleString('fr-FR').replace(/\u202f/g,' ');};
+var state={who:'Chadrak',entity:'Digital Mind',tva:true,doctype:'Proforma',lines:[]};
+var pin='';
+function refreshPins(){for(var i=0;i<4;i++){document.getElementById('p'+i).textContent=pin[i]?'•':'';}}
+function key(k){
+  document.getElementById('err').textContent='';
+  if(k==='back'){pin=pin.slice(0,-1);refreshPins();return;}
+  if(k==='ok'){tryUnlock();return;}
+  if(pin.length<4){pin+=k;refreshPins();}
+  if(pin.length===4){setTimeout(tryUnlock,150);}
+}
+function tryUnlock(){
+  if(pin.length<4){document.getElementById('err').textContent='Code à 4 chiffres';return;}
+  if(CODES[state.who]===pin){document.getElementById('gate').style.display='none';}
+  else{document.getElementById('err').textContent='Code incorrect pour '+state.who;pin='';refreshPins();}
+}
+var whoChips=document.querySelectorAll('#whoChips .chip');
+for(var i=0;i<whoChips.length;i++){whoChips[i].onclick=function(){
+  for(var j=0;j<whoChips.length;j++){whoChips[j].classList.remove('on');}
+  this.classList.add('on');state.who=this.getAttribute('data-who');
+  document.getElementById('whoName').textContent=state.who;
+  pin='';refreshPins();document.getElementById('err').textContent='';
+};}
+var entChips=document.querySelectorAll('#entity .chip');
+for(var i=0;i<entChips.length;i++){entChips[i].onclick=function(){
+  for(var j=0;j<entChips.length;j++){entChips[j].classList.remove('on');}
+  this.classList.add('on');state.entity=this.getAttribute('data-e');state.tva=this.getAttribute('data-tva')==='1';render();
+};}
+var dtBtns=document.querySelectorAll('#doctype button');
+for(var i=0;i<dtBtns.length;i++){dtBtns[i].onclick=function(){
+  for(var j=0;j<dtBtns.length;j++){dtBtns[j].classList.remove('on');}
+  this.classList.add('on');state.doctype=this.getAttribute('data-d');render();
+};}
+document.getElementById('client').oninput=render;
+function addLine(){state.lines.push({d:'',q:1,p:0});renderLines();render();}
+function delLine(i){state.lines.splice(i,1);renderLines();render();}
+function renderLines(){
+  var wrap=document.getElementById('lines');wrap.innerHTML='';
+  state.lines.forEach(function(ln,i){
+    var el=document.createElement('div');el.className='line';
+    el.innerHTML='<input class="desig" placeholder="Désignation" value="'+ln.d.replace(/"/g,'&quot;')+'" oninput="upd('+i+',0,this.value)"/><div class="row2"><input class="qty" inputmode="numeric" placeholder="Qté" value="'+(ln.q||'')+'" oninput="upd('+i+',1,this.value)"/><input class="pu" inputmode="numeric" placeholder="Prix unitaire" value="'+(ln.p||'')+'" oninput="upd('+i+',2,this.value)"/><span class="ltot">'+fmt((ln.q||0)*(ln.p||0))+'</span><button class="del" onclick="delLine('+i+')">✕</button></div>';
+    wrap.appendChild(el);
+  });
+}
+function upd(i,k,v){var key=k===0?'d':(k===1?'q':'p');state.lines[i][key]=k===0?v:(parseFloat((''+v).replace(/[^0-9.]/g,''))||0);document.querySelectorAll('.line')[i].querySelector('.ltot').textContent=fmt((state.lines[i].q||0)*(state.lines[i].p||0));render();}
+function totals(){var ht=state.lines.reduce(function(s,l){return s+(l.q||0)*(l.p||0);},0);var tva=state.tva?Math.round(ht*0.19):0;return{ht:ht,tva:tva,ttc:ht+tva};}
+function render(){
+  var t=totals();
+  document.getElementById('htv').textContent=fmt(t.ht)+' FCFA';
+  document.getElementById('tvaLine').style.display=state.tva?'flex':'none';
+  document.getElementById('tvav').textContent=fmt(t.tva);
+  document.getElementById('totLabel').textContent=state.tva?'Net à payer (TTC)':'Total HT';
+  document.getElementById('totv').textContent=fmt(state.tva?t.ttc:t.ht)+' FCFA';
+  var ok=document.getElementById('client').value.trim()&&state.lines.length&&t.ht>0;
+  document.getElementById('genBtn').disabled=!ok;
+  document.getElementById('genBtn').textContent='Générer '+(state.doctype==='BL'?'le bon de livraison':'la '+state.doctype.toLowerCase());
+}
+var WEBHOOK='https://hook.eu2.make.com/81idlfbkrfg1bphaojdsv4xkn865c6sb';
+function generate(){
+  var btn=document.getElementById('genBtn');btn.disabled=true;btn.textContent='Génération en cours…';
+  var c=document.getElementById('client').value.trim();
+  var payload={commercial:state.who,entite:state.entity,doctype:state.doctype,client:c,lignes:state.lines.map(function(l){return{designation:l.d,quantite:l.q,prix:l.p};})};
+  fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var GEN_WEBHOOKS={Proforma:'https://hook.eu2.make.com/cpgnv8tipio0u1xlmurxgy7fpsmuc8es'};
+    if(GEN_WEBHOOKS[state.doctype]){fetch(GEN_WEBHOOKS[state.doctype],{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({commande_id:(data&&data.commande_id)||''})}).catch(function(){});}
+    var t=totals();
+    var li=state.lines.map(function(l){return '• '+(l.d||'(sans nom)')+' — '+l.q+' × '+fmt(l.p);}).join('<br>');
+    var h='<b>'+state.doctype+'</b> · '+state.entity+'<br>Client : <b>'+c+'</b><br>Commercial : '+state.who+'<br><br>'+li+'<br><br>';
+    h+=state.tva?('HT '+fmt(t.ht)+' · TVA '+fmt(t.tva)+' · <b>TTC '+fmt(t.ttc)+' FCFA</b>'):('<b>Total HT '+fmt(t.ht)+' FCFA</b>');
+    if(data&&data.lien){h+='<br><br><a href="'+data.lien+'" target="_blank" style="background:#F5C842;color:#111;padding:10px 20px;border-radius:10px;font-weight:700;text-decoration:none;display:inline-block;margin-top:6px;">📄 Ouvrir le document</a>';}
+    document.getElementById('recap').innerHTML=h;
+    document.getElementById('shT').textContent='✅ Document généré !';
+    document.getElementById('shP').textContent='Le PDF a été envoyé par email.';
+  })
+  .catch(function(e){
+    document.getElementById('recap').innerHTML='<span style="color:#E0654A">❌ Erreur de connexion. Réessaie.</span>';
+    document.getElementById('shT').textContent='Erreur';
+  })
+  .then(function(){document.getElementById('sheet').classList.add('show');btn.disabled=false;btn.textContent='Générer le document';});
+}
+function closeSheet(){document.getElementById('sheet').classList.remove('show');state.lines=[];document.getElementById('client').value='';renderLines();render();}
+addLine();render();
+</script>
+</body>
+</html>
