@@ -196,7 +196,7 @@ function generate(){
   fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
   .then(function(r){return r.json();})
   .then(function(data){
-    var GEN_WEBHOOKS={Proforma:'https://hook.eu2.make.com/cpgnv8tipio0u1xlmurxgy7fpsmuc8es'};
+    var GEN_WEBHOOKS={Proforma:'https://hook.eu2.make.com/cpgnv8tipio0u1xlmurxgy7fpsmuc8es',Facture:'https://hook.eu2.make.com/o54fsoygjg1j8lm9stp1vowap8v6sbpt','Bon de livraison':'https://hook.eu2.make.com/cmyn3n7b2qspru8iikkg1phm7167tppc'};
     if(GEN_WEBHOOKS[state.doctype]){fetch(GEN_WEBHOOKS[state.doctype],{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({commande_id:(data&&data.commande_id)||''})}).catch(function(){});}
     var t=totals();
     var li=state.lines.map(function(l){return '• '+(l.d||'(sans nom)')+' — '+l.q+' × '+fmt(l.p);}).join('<br>');
