@@ -130,7 +130,7 @@ input::placeholder{color:#5d5b54}
 </div>
 
 <script>
-var CODES={Chadrak:"4827",Amra:"5193",Mahaza:"6470",Yasmine:"7351",Ben:"9024"};
+var CODES={Chadrak:"4827",Amra:"5193",Mahaza:"6470",Yasmine:"7351",Ben:"9024"};var EMAILS={Chadrak:"backofficedigital007@gmail.com",Amra:"amrayahayamiko@gmail.com",Mahaza:"ahmedalhousseinimahaza@gmail.com",Yasmine:"marketinglbtk030@gmail.com",Ben:"digitalmindservicees@gmail.com"};
 var fmt=function(n){return n.toLocaleString('fr-FR').replace(/\u202f/g,' ');};
 var state={who:'Chadrak',entity:'Digital Mind',tva:true,doctype:'Proforma',lines:[]};
 var pin='';
@@ -192,7 +192,7 @@ var WEBHOOK='https://hook.eu2.make.com/81idlfbkrfg1bphaojdsv4xkn865c6sb';
 function generate(){
   var btn=document.getElementById('genBtn');btn.disabled=true;btn.textContent='Génération en cours…';
   var c=document.getElementById('client').value.trim();
-  var payload={commercial:state.who,entite:state.entity,doctype:state.doctype,client:c,lignes:state.lines.filter(function(l){return(l.d&&l.d.trim())||l.p;}).map(function(l){return{designation:l.d,quantite:l.q,prix:l.p};})};
+  var payload={commercial:state.who,email_createur:EMAILS[state.who]||'',entite:state.entity,doctype:state.doctype,client:c,lignes:state.lines.filter(function(l){return(l.d&&l.d.trim())||l.p;}).map(function(l){return{designation:l.d,quantite:l.q,prix:l.p};})};
   fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
   .then(function(r){return r.json();})
   .then(function(data){
