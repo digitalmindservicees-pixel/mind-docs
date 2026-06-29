@@ -104,7 +104,7 @@ input::placeholder{color:#5d5b54}
   <div class="seg" id="doctype">
     <button class="on" data-d="Proforma">Proforma</button>
     <button data-d="Facture">Facture</button>
-    <button data-d="BL">Bon de livraison</button>
+    <button data-d="Bon de livraison">Bon de livraison</button>
   </div>
   <div class="lbl">Client</div>
   <input id="client" placeholder="Nom du client" autocomplete="off"/>
@@ -192,7 +192,7 @@ var WEBHOOK='https://hook.eu2.make.com/81idlfbkrfg1bphaojdsv4xkn865c6sb';
 function generate(){
   var btn=document.getElementById('genBtn');btn.disabled=true;btn.textContent='Génération en cours…';
   var c=document.getElementById('client').value.trim();
-  var payload={commercial:state.who,entite:state.entity,doctype:state.doctype,client:c,lignes:state.lines.map(function(l){return{designation:l.d,quantite:l.q,prix:l.p};})};
+  var payload={commercial:state.who,entite:state.entity,doctype:state.doctype,client:c,lignes:state.lines.filter(function(l){return(l.d&&l.d.trim())||l.p;}).map(function(l){return{designation:l.d,quantite:l.q,prix:l.p};})};
   fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
   .then(function(r){return r.json();})
   .then(function(data){
